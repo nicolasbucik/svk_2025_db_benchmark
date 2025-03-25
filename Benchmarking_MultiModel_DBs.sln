@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking_MultiModel_DBs", "Benchmarking_MultiModel_DBs\Benchmarking_MultiModel_DBs.csproj", "{D2102A9B-A663-45DD-A54B-16A1C75754B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking_MultiModel_SplitDataset", "Benchmarking_MultiModel_SplitDataset\Benchmarking_MultiModel_SplitDataset.csproj", "{98C350F4-141C-461A-BEA0-1BE07E07334E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarking_MultiModel_DBImporter", "Benchmarking_MultiModel_DBImporter\Benchmarking_MultiModel_DBImporter.csproj", "{C598FA86-8DF2-40B7-806E-ECFEE62CDF2B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2102A9B-A663-45DD-A54B-16A1C75754B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2102A9B-A663-45DD-A54B-16A1C75754B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2102A9B-A663-45DD-A54B-16A1C75754B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2102A9B-A663-45DD-A54B-16A1C75754B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98C350F4-141C-461A-BEA0-1BE07E07334E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98C350F4-141C-461A-BEA0-1BE07E07334E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98C350F4-141C-461A-BEA0-1BE07E07334E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98C350F4-141C-461A-BEA0-1BE07E07334E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C598FA86-8DF2-40B7-806E-ECFEE62CDF2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C598FA86-8DF2-40B7-806E-ECFEE62CDF2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C598FA86-8DF2-40B7-806E-ECFEE62CDF2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C598FA86-8DF2-40B7-806E-ECFEE62CDF2B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
