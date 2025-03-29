@@ -146,7 +146,7 @@ public class Benchmark_ArangoDB
         Console.WriteLine($"{_queryName} - Warm Cache - Parallel Execution Time ({parallelClients} clients): {(long)warmCacheExecutionTimes.Average()} ms");
 
         // Cold cache tests (clear cache before the first query)
-        await ClearCache(); // Clear the cache before the first query
+        await ClearCache();
         var coldCacheExecutionTimes = new List<long>();
         var coldCacheTasks = new List<Task<List<dynamic>>>();
         for (int i = 0; i < parallelClients; i++)
