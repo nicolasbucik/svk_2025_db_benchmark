@@ -6,7 +6,6 @@ public class DatasetSubsetGenerator
     {
         var lines = new List<string?>();
 
-        // Read all lines from the input file
         using (var reader = new StreamReader(inputFilePath))
         {
             string? line;
@@ -25,7 +24,6 @@ public class DatasetSubsetGenerator
         var random = new Random(42);
         var shuffledLines = lines.OrderBy(x => random.Next()).ToList();
 
-        // Write the first N lines to the output file
         using (var writer = new StreamWriter(outputFilePath))
         {
             for (int i = 0; i < maxLines; i++)
