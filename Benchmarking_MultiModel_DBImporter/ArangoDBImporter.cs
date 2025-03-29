@@ -34,7 +34,7 @@ public class ArangoDBImporter
             var document = await _database.Collection(collectionName).DocumentAsync<object>(documentKey);
             return document != null;
         }
-        catch (ArangoServerException) // Document not found
+        catch (ArangoServerException)
         {
             return false;
         }
@@ -42,13 +42,11 @@ public class ArangoDBImporter
 
     public async Task ImportEdges(string edgesFilePath)
     {
-        // Ensure the "users" collection exists
         if (!await CollectionExistsAsync("users"))
         {
             await _database.CreateCollectionAsync("users", type: CollectionType.Document);
         }
 
-        // Ensure the "edges" collection exists and is an edge collection
         if (!await CollectionExistsAsync("edges"))
         {
             await _database.CreateCollectionAsync("edges", type: CollectionType.Edge);
@@ -68,7 +66,6 @@ public class ArangoDBImporter
                     var fromUser = parts[0];
                     var toUser = parts[1];
 
-                    // Insert users if they don't already exist
                     if (!await DocumentExistsAsync("users", fromUser))
                     {
                         await usersCollection.InsertAsync(new { _key = fromUser });
@@ -92,7 +89,6 @@ public class ArangoDBImporter
 
     public async Task ImportFeatures(string featFilePath)
     {
-        // Ensure the "features" collection exists
         if (!await CollectionExistsAsync("features"))
         {
             await _database.CreateCollectionAsync("features", type: CollectionType.Document);
@@ -124,7 +120,6 @@ public class ArangoDBImporter
 
     public async Task ImportCircles(string circlesFilePath)
     {
-        // Ensure the "circles" collection exists
         if (!await CollectionExistsAsync("circles"))
         {
             await _database.CreateCollectionAsync("circles", type: CollectionType.Document);
@@ -156,7 +151,6 @@ public class ArangoDBImporter
 
     public async Task ImportEgoFeatures(string egofeatFilePath)
     {
-        // Ensure the "egoFeatures" collection exists
         if (!await CollectionExistsAsync("egoFeatures"))
         {
             await _database.CreateCollectionAsync("egoFeatures", type: CollectionType.Document);
@@ -183,7 +177,6 @@ public class ArangoDBImporter
 
     public async Task ImportFeatureNames(string featnamesFilePath)
     {
-        // Ensure the "featureNames" collection exists
         if (!await CollectionExistsAsync("featureNames"))
         {
             await _database.CreateCollectionAsync("featureNames", type: CollectionType.Document);
