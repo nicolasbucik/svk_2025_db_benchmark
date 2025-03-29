@@ -6,10 +6,8 @@ public class CsvWriter
     {
         using (var writer = new StreamWriter(filePath))
         {
-            // Write CSV header
             writer.WriteLine("QueryName,ExecutionTimeMs,CacheType,QueryOutput");
 
-            // Write each result
             foreach (var result in results)
             {
                 writer.WriteLine($"{result.QueryName  ?? ""},{result.ExecutionTimeMs},{result.CacheType ?? ""},\"{result.QueryOutput ?? ""}\"");
@@ -21,10 +19,8 @@ public class CsvWriter
     {
         using (var writer = new StreamWriter(filePath))
         {
-            // Write CSV header
             writer.WriteLine("QueryName,ExecutionTimeMs,CacheType");
 
-            // Write each result
             foreach (var result in results)
             {
                 writer.WriteLine($"{result.QueryName ?? ""},{result.ExecutionTimeMs},{result?.CacheType ?? ""}");
