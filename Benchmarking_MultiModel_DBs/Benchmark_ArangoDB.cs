@@ -33,7 +33,6 @@ public class Benchmark_ArangoDB
             {
                 sshClient.Connect();
         
-                // Restart ArangoDB service (this will clear the cache)
                 var command = sshClient.CreateCommand($"sudo systemctl restart arangodb3");
                 command.Execute();
                 sshClient.Disconnect();
@@ -51,16 +50,13 @@ public class Benchmark_ArangoDB
         Console.WriteLine($"Running non-parallel tests for {_queryName}...");
         var results = new List<BenchmarkResult>();
 
-        // Build the query (outside timing)
         var query = _query();
 
-        // Warmup runs (warm cache)
         for (int i = 0; i < warmupRuns; i++)
         {
             await ExecuteQuery(query);
         }
 
-        // Benchmark runs (warm cache)
         var warmCacheExecutionTimes = new List<long>();
         for (int i = 0; i < benchmarkRuns; i++)
         {
@@ -79,7 +75,6 @@ public class Benchmark_ArangoDB
         }
         Console.WriteLine($"{_queryName} - Warm Cache - Average Execution Time: {warmCacheExecutionTimes.Average()} ms");
 
-        // Benchmark runs (cold cache)
         var coldCacheExecutionTimes = new List<long>();
         for (int i = 0; i < benchmarkRuns; i++)
         {
@@ -107,16 +102,13 @@ public class Benchmark_ArangoDB
         Console.WriteLine($"Running parallel tests for {_queryName}...");
         var results = new List<BenchmarkResult>();
 
-        // Build the query (outside timing)
         var query = _query();
 
-        // Warmup runs (warm cache)
         for (int i = 0; i < warmupRuns; i++)
         {
             await ExecuteQuery(query);
         }
 
-        // Warm cache tests
         var warmCacheTasks = new List<Task<List<dynamic>>>();
         var warmCacheExecutionTimes = new List<long>();
 
@@ -145,7 +137,6 @@ public class Benchmark_ArangoDB
 
         Console.WriteLine($"{_queryName} - Warm Cache - Parallel Execution Time ({parallelClients} clients): {(long)warmCacheExecutionTimes.Average()} ms");
 
-        // Cold cache tests (clear cache before the first query)
         await ClearCache();
         var coldCacheExecutionTimes = new List<long>();
         var coldCacheTasks = new List<Task<List<dynamic>>>();
