@@ -38,22 +38,18 @@ namespace Benchmarking_MultiModel_DBs
         await Task.Delay(1000);
         }
 
-        // Run non-parallel tests with warm and cold cache
         public async Task<List<BenchmarkResult>> RunNonParallelTests(int warmupRuns, int benchmarkRuns)
         {
             Console.WriteLine($"Running non-parallel tests for {_queryName}...");
             var results = new List<BenchmarkResult>();
 
-            // Build the query (outside timing)
             var query = _queryBuilder();
 
-            // Warmup runs (warm cache)
             for (int i = 0; i < warmupRuns; i++)
             {
                 await ExecuteQuery(query);
             }
 
-            // Benchmark runs (warm cache)
             var warmCacheExecutionTimes = new List<long>();
             for (int i = 0; i < benchmarkRuns; i++)
             {
@@ -96,22 +92,18 @@ namespace Benchmarking_MultiModel_DBs
             return results;
         }
 
-        // Run parallel tests with warm and cold cache
         public async Task<List<BenchmarkResult>> RunParallelTests(int warmupRuns, int benchmarkRuns, int parallelClients)
         {
             Console.WriteLine($"Running parallel tests for {_queryName}...");
             var results = new List<BenchmarkResult>();
 
-            // Build the query (outside timing)
             var query = _queryBuilder();
 
-            // Warmup runs (warm cache)
             for (int i = 0; i < warmupRuns; i++)
             {
                 await ExecuteQuery(query);
             }
 
-            // Warm cache tests
             var warmCacheExecutionTimes = new List<long>();
 
             var warmCacheTasks = new List<Task<string>>();
@@ -141,7 +133,6 @@ namespace Benchmarking_MultiModel_DBs
 
             Console.WriteLine($"{_queryName} - Warm Cache - Parallel Execution Time ({parallelClients} clients): {warmCacheExecutionTimes.Average()} ms");
 
-            // Cold cache tests (clear cache before the first query)
             await ClearCache();
             var coldCacheExecutionTimes = new List<long>();
             var coldCacheTasks = new List<Task<string>>();
