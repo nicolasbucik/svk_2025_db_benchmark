@@ -14,19 +14,28 @@ namespace Benchmarking_MultiModel_DBs
         {
             _queryBuilder = queryBuilder;
             _queryName = queryName;
-
-            // Create a pool of database connections
             OClient.CreateDatabasePool(hostname, port, databaseName, ODatabaseType.Graph, userName, userPassword, poolSize, alias);
             _database = new ODatabase(alias);
         }
 
-        // Clear Cache function is not directly applicable in OrientDB, but you could manually clear the cache or run specific queries if needed.
         public async Task ClearCache()
         {
-            // OrientDB does not have a built-in cache clear function like MongoDB.
-            // You may need to rely on the database's configuration for cache management.
-            Console.WriteLine("Clearing Cache (OrientDB-specific logic not implemented in this example)");
-            await Task.CompletedTask;
+            using (var sshClient = new SshClient("", "root", ""))
+            {
+                try
+                {
+                    sshClient.Connect();
+                    var command = sshClient.CreateCommand($"sudo systemctl restart orientdb");
+                    command.Execute();
+                    sshClient.Disconnect();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error connecting to SSH: {ex.Message}");
+                }
+            }
+        }
+        await Task.Delay(1000);
         }
 
         // Run non-parallel tests with warm and cold cache
@@ -133,7 +142,7 @@ namespace Benchmarking_MultiModel_DBs
             Console.WriteLine($"{_queryName} - Warm Cache - Parallel Execution Time ({parallelClients} clients): {warmCacheExecutionTimes.Average()} ms");
 
             // Cold cache tests (clear cache before the first query)
-            await ClearCache(); // Clear the cache before the first query
+            await ClearCache();
             var coldCacheExecutionTimes = new List<long>();
             var coldCacheTasks = new List<Task<string>>();
 
@@ -165,12 +174,9 @@ namespace Benchmarking_MultiModel_DBs
             return results;
         }
 
-        // Execute a query and return the result
         private async Task<string> ExecuteQuery(string query)
         {
-            // Execute SQL-like queries in OrientDB
-            var result = _database.Query(query); // Assuming query returns documents
-            
+            var result = _database.Query(query); 
             return await Task.FromResult(result?.ToString() ?? "");
         }
     }
