@@ -138,7 +138,7 @@ public class Benchmark_MongoDB
         }
 
         // Cold cache tests (clear cache before the first query)
-        await ClearCache(); // Clear the cache before the first query
+        await ClearCache();
         var coldCacheExecutionTimes = new List<long>();
         var coldCacheTasks = new List<Task<BsonDocument>>();
         for (int i = 0; i < parallelClients; i++)
@@ -164,14 +164,8 @@ public class Benchmark_MongoDB
         }
         var coldCacheResults = await Task.WhenAll(coldCacheTasks);
         
-
-        
         Console.WriteLine($"{_queryName} - Cold Cache - Parallel Execution Time ({parallelClients} clients): {(long)coldCacheExecutionTimes.Average()} ms");
-        // Console.WriteLine($"{_queryName} - Cold Cache - Query Outputs:");
-        foreach (var result in coldCacheResults)
-        {
-            // Console.WriteLine(result);
-        }
+
         
         return results;
     }
