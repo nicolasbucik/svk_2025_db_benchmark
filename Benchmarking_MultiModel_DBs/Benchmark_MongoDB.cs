@@ -29,22 +29,18 @@ public class Benchmark_MongoDB
         await _database.RunCommandAsync<BsonDocument>(command2);
     }
 
-    // Run non-parallel tests with warm and cold cache
     public async Task<List<BenchmarkResult>> RunNonParallelTests(int warmupRuns, int benchmarkRuns)
     {
         Console.WriteLine($"Running non-parallel tests for {_queryName}...");
         var results = new List<BenchmarkResult>();
         
-        // Build the query (outside timing)
         var query = _queryBuilder();
 
-        // Warmup runs (warm cache)
         for (int i = 0; i < warmupRuns; i++)
         {
             await ExecuteQuery(query);
         }
 
-        // Benchmark runs (warm cache)
         var warmCacheExecutionTimes = new List<long>();
         for (int i = 0; i < benchmarkRuns; i++)
         {
@@ -52,7 +48,6 @@ public class Benchmark_MongoDB
             var result = await ExecuteQuery(query);
             stopwatch.Stop();
             warmCacheExecutionTimes.Add(stopwatch.ElapsedMilliseconds);
-            // Console.WriteLine($"{_queryName} - Warm Cache - Query Output: {result}");
             
             results.Add(new BenchmarkResult
             {
@@ -72,7 +67,6 @@ public class Benchmark_MongoDB
             var result = await ExecuteQuery(query);
             stopwatch.Stop();
             coldCacheExecutionTimes.Add(stopwatch.ElapsedMilliseconds);
-            // Console.WriteLine($"{_queryName} - Cold Cache - Query Output: {result}");
             
             results.Add(new BenchmarkResult
             {
@@ -88,22 +82,18 @@ public class Benchmark_MongoDB
         return results;
     }
 
-    // Run parallel tests with warm and cold cache
     public async Task<List<BenchmarkResult>> RunParallelTests(int warmupRuns, int benchmarkRuns, int parallelClients)
     {
         Console.WriteLine($"Running parallel tests for {_queryName}...");
         var results = new List<BenchmarkResult>();
-
-        // Build the query (outside timing)
+        
         var query = _queryBuilder();
         
-        // Warmup runs (warm cache)
         for (int i = 0; i < warmupRuns; i++)
         {
             await ExecuteQuery(query);
         }
 
-        // Warm cache tests
         var warmCacheTasks = new List<Task<BsonDocument>>();
         var warmCacheExecutionTimes = new List<long>();
         
@@ -137,7 +127,6 @@ public class Benchmark_MongoDB
             // Console.WriteLine(result);
         }
 
-        // Cold cache tests (clear cache before the first query)
         await ClearCache();
         var coldCacheExecutionTimes = new List<long>();
         var coldCacheTasks = new List<Task<BsonDocument>>();
@@ -165,12 +154,10 @@ public class Benchmark_MongoDB
         var coldCacheResults = await Task.WhenAll(coldCacheTasks);
         
         Console.WriteLine($"{_queryName} - Cold Cache - Parallel Execution Time ({parallelClients} clients): {(long)coldCacheExecutionTimes.Average()} ms");
-
         
         return results;
     }
 
-    // Execute a query and return the result
     private async Task<BsonDocument> ExecuteQuery(string query)
     {
         return await _database.RunCommandAsync<BsonDocument>(query);
