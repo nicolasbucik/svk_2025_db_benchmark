@@ -13,15 +13,12 @@ public class OrientDBImporter
 
     public OrientDBImporter(string hostname, int port, string databaseName, string userName, string userPassword, int poolSize, string alias)
     {
-
-        // Create a pool of database connections
         OClient.CreateDatabasePool(hostname, port, databaseName, ODatabaseType.Graph, userName, userPassword, poolSize, alias);
         _database = new ODatabase(alias);
     }
 
      public async Task<bool> CollectionExistsAsync(string collectionName)
         {
-            // In OrientDB, we check if a class exists
             return await Task.FromResult(_database.Class.Exists(collectionName));
         }
 
@@ -29,26 +26,22 @@ public class OrientDBImporter
         {
             try
             {
-                // In OrientDB, we fetch the document by its key
                 var document = _database.Load<ODocument>(collectionName, documentKey);
                 return document != null;
             }
             catch
             {
-                // If document is not found, it will throw an exception
                 return false;
             }
         }
 
         public async Task ImportEdges(string edgesFilePath)
         {
-            // Ensure the "users" class exists
             if (!await CollectionExistsAsync("users"))
             {
                 _database.CreateClass("users", OClassType.Vertex);
             }
 
-            // Ensure the "edges" class exists and is an edge class
             if (!await CollectionExistsAsync("edges"))
             {
                 _database.CreateClass("edges", OClassType.Edge);
@@ -68,7 +61,6 @@ public class OrientDBImporter
                         var fromUser = parts[0];
                         var toUser = parts[1];
 
-                        // Insert users if they don't already exist
                         if (!await DocumentExistsAsync("users", fromUser))
                         {
                             var userDoc = new ODocument("users") { { "_key", fromUser } };
@@ -80,7 +72,6 @@ public class OrientDBImporter
                             await Task.Run(() => _database.Save(userDoc));
                         }
 
-                        // Insert the edge
                         var edgeDoc = new ODocument("edges")
                         {
                             { "_from", $"users/{fromUser}" },
@@ -94,7 +85,6 @@ public class OrientDBImporter
 
         public async Task ImportFeatures(string featFilePath)
         {
-            // Ensure the "features" class exists
             if (!await CollectionExistsAsync("features"))
             {
                 _database.CreateClass("features", OClassType.Document);
@@ -126,7 +116,6 @@ public class OrientDBImporter
 
         public async Task ImportCircles(string circlesFilePath)
         {
-            // Ensure the "circles" class exists
             if (!await CollectionExistsAsync("circles"))
             {
                 _database.CreateClass("circles", OClassType.Document);
@@ -158,7 +147,6 @@ public class OrientDBImporter
 
         public async Task ImportEgoFeatures(string egofeatFilePath)
         {
-            // Ensure the "egoFeatures" class exists
             if (!await CollectionExistsAsync("egoFeatures"))
             {
                 _database.CreateClass("egoFeatures", OClassType.Document);
@@ -175,7 +163,7 @@ public class OrientDBImporter
 
                     var egoFeatureDoc = new ODocument("egoFeatures")
                     {
-                        { "_key", "ego" }, // Ego node has a fixed ID
+                        { "_key", "ego" }, 
                         { "features", features }
                     };
                     await Task.Run(() => _database.Save(egoFeatureDoc));
@@ -185,7 +173,6 @@ public class OrientDBImporter
 
         public async Task ImportFeatureNames(string featnamesFilePath)
         {
-            // Ensure the "featureNames" class exists
             if (!await CollectionExistsAsync("featureNames"))
             {
                 _database.CreateClass("featureNames", OClassType.Document);
